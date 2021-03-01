@@ -6,11 +6,12 @@
 --   \\\\////  
 --   \\\\////
 --  
---  load sample into buffer 2 (parapeters) or record into buffer 1
+--  load sample into buffer 2 (via parameters) or record into buffer 1
 --  key 2 toggles record
 --  key 3 starts play
---  enc 2 incremnt size
+--  enc 2 increment size
 --  enc 3 scale select for pitch dispersion (set in parameters)
+--  everything else in parameters
 
 engine.name = 'oneGrain3'
 
