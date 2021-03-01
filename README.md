@@ -1,7 +1,7 @@
 # grain
 
 the beginning of a grain instrument . . .
-right now there are two buffers, one for live recirding (1) and one for samples (2)
+right now there are two buffers, one for live recording (1) and one for samples (2)
 currently they won't play simultaneously
 
 --  load sample into buffer 2 (via parameters) or record into buffer 1
