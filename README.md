@@ -12,3 +12,4 @@ currently they won't play simultaneously
 
 many things to do !
 using scales for pitch dispersion can work well but also often too many notes . . . 
+so . . . coming v soon, a version that uses chords instead of scales
