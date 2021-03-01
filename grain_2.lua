@@ -74,12 +74,6 @@ function init()
   params:add{type="control",id="density",controlspec=cs_density,
     action=function(x) density = x end}
   
-  --params:add_number("increment","increment",1,16,4)
-  --params:set_action("increment", function(x) divisor = x end)
-  
-  --params:add_number("timeDisp","timeDisp",0,440,0)
-  --params:set_action("timeDisp", function(x) timeDisp = x end)
-  
   params:add_number("timeDisp","timeDisp",1,16,1)
   params:set_action("timeDisp", function(x) timeDispDivisor = x increment() end)
   
@@ -87,19 +81,8 @@ function init()
   params:add{type="control",id="pitch",controlspec=cs_pitch,
     action=function(x) basePitch = x end}
   
-  
-  --cs_pitchDisp = controlspec.new(0.0,2.0,'lin',0,0,'')
-  --for pitch variation based on scale
-  --cs_pitchDisp = controlspec.new(0,scaleLength,'lin',0,0,'')
-  --params:add{type="control",id="pitchDisp",controlspec=cs_pitchDisp,
-    --action=function(x) pitchDisp = x end}
-    
   params:add_number("pitchDisp","pitchDisp",1,scaleLength,1)
   params:set_action("pitchDisp", function(x) pitchDisp = x pitch() end)
-  
-  --cs_pitchQ = controlspec.new(0.0,1.0,'lin',0,0,'')
-  --params:add{type="control",id="pitchQ",controlspec=cs_pitchQ,
-    --action=function(x) pitchQ = x end}
   
   cs_pan = controlspec.new(0.0,1.0,'lin',0,0.75,'')
   params:add{type="control",id="pan",controlspec=cs_pan,
@@ -151,9 +134,6 @@ function pitch()
 end
 
 function startPoint()
-  --calculate start point here, not in engine
-  --(start + Rand(timeDisp.neg,timeDisp))%BufFrames.kr(bufnum)
-  --start = ((count * speed) + math.random(-timeDisp,timeDisp))%length
   start = ((count * inc) + math.random(-timeDisp,timeDisp))%length
   if (start + (duration * 48000)) > length then
     start = 0
@@ -211,13 +191,7 @@ function key(id,state)
      end
     end
     if id == 3 and state == 1 then
-    --clock.run(strum, math.random(16), math.random(8))
     clock.run(continuous)
-    --print('grain')
-    --engine.rate(math.random(4.0))
-    --engine.start(math.random(4)*44100)
-    --engine.duration(0.125)
-    --engine.pan(1.0)
   end
   redraw()
 end
