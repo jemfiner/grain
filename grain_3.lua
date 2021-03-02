@@ -7,26 +7,27 @@
 --   \\\\////
 --
 --  
---  load sample into buffer 2 (parapeters) or record into buffer 1
+--  load sample into buffer 2 (parameters) or record into buffer 1
 --  key 1: alt
 --  key 2: toggles record
 --  key 3: starts play
 --  enc 2: increment amount
+--  enc 2 + alt: root note (rate)
 --  enc 3: chord select for pitch dispersion 
 --  enc 3 + alt: pitch dispersion
 --
 --  the higher the value of pitchDisp, the wider the span of notes from the chord
---  add interval and root note as variables (root note via midi ?)
+--  to do: among other things, add interval as variable (& root note via midi ?)
 
 engine.name = 'oneGrain3'
 
 local music = require 'musicutil'
 local scaleLength = 16
 local chordLength = 3
-local chordRoot = 60
+local chordRoot = 0
 local mode = math.random(#music.CHORDS)
 --scale = music.generate_scale_of_length(60,music.SCALES[mode].name,8)
-local chord = music.generate_chord(chordRoot,'minor')
+local chord = music.generate_chord(60,'minor')
 local scale = music.generate_scale_of_length(60,'chromatic',scaleLength)
 local rates = {}
 
@@ -91,9 +92,9 @@ function init()
   params:add_number("timeDisp","timeDisp",1,16,1)
   params:set_action("timeDisp", function(x) timeDispDivisor = x increment() end)
   
-  cs_pitch = controlspec.new(-4.0,4.0,'lin',0,1,'')
-  params:add{type="control",id="pitch",controlspec=cs_pitch,
-    action=function(x) basePitch = x end}
+  --cs_pitch = controlspec.new(-4.0,4.0,'lin',0,1,'')
+  --params:add{type="control",id="pitch",controlspec=cs_pitch,
+    --action=function(x) basePitch = x end}
   
   
   --cs_pitchDisp = controlspec.new(0.0,2.0,'lin',0,0,'')
@@ -139,7 +140,8 @@ end
 function rateCalc()
   rates = {}
   for i = 1,#chord do
-    table.insert(rates,(1 + (chord[i]-chordRoot)/12))
+    print(i, chord[i])
+    table.insert(rates,(1 + (chord[i]-60)/12))
     print(' ', rates[i])
   end
 end
@@ -237,14 +239,15 @@ function enc(id,delta)
       divisor = clamp(divisor + delta,1,16)
       increment()
      else
-      chordRoot = clamp(chordRoot + delta,24,84)
-      print('chord root ', chordRoot)
+      chordRoot = clamp(chordRoot + delta,-24,24)
+      basePitch = 1 + chordRoot/12
+      print('chord root ', chordRoot, 'base pitch ', basePitch)
      end
    end
    if id == 3 then
      if alt == false then
      mode = util.clamp(mode + delta , 1, #music.CHORDS)
-     chord = music.generate_chord(chordRoot,music.CHORDS[mode].name)
+     chord = music.generate_chord(60,music.CHORDS[mode].name)
      chordLength = #chord
      if pitchDisp > chordLength then
        pitchDisp = chordLength
@@ -263,6 +266,14 @@ function enc(id,delta)
 end
 
 function draw()
+  screen.move(0,10)
+  screen.text('root')
+  screen.move(20,10)
+  screen.text(string.format("%.3f",basePitch))
+  screen.move(90,10)
+  screen.text('pitch d')
+  screen.move(123,10)
+  screen.text(pitchDisp)
   screen.move((120/length)*start,30)
   screen.text('I')
   screen.move(0,50)
@@ -273,8 +284,6 @@ function draw()
   screen.text('scale')
   screen.move(45,60)
   screen.text(music.CHORDS[mode].name)
-  screen.move(120,60)
-  screen.text(pitchDisp)
   screen.move(100,50)
   screen.text('rec')
   screen.move(115,50)
