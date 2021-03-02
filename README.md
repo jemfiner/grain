@@ -20,5 +20,5 @@ grain_3.lua: uses chords for pitch dispersion
 -  key 3: starts play
 -  enc 2: increment amount
 -  enc 3: chord select for pitch dispersion 
--  enc 3 + alt: pitch dispersion
+-  enc 3 + alt: pitch dispersion value
 -  the higher the value of pitchDisp, the wider the span of notes from the chord
